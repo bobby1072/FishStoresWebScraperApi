@@ -1,14 +1,11 @@
 interface IWebScrapClass {
-  Puppeteer: any;
   Url: string;
-  scrapeResults: (searchTerm: string) => Promise<void>;
+  scrapeResults: (searchTerm: string, browser: any) => Promise<void>;
 }
 interface IScrapeResults {}
 export class FishDeal implements IWebScrapClass {
-  public Puppeteer = require("puppeteer");
   public Url = "https://fishdeal.co.uk/";
-  async scrapeResults(searchTerm: string) {
-    const browser = await this.Puppeteer.launch();
+  async scrapeResults(searchTerm: string, browser: any) {
     const page = await browser.newPage();
     await page.goto(this.Url);
     page.waitForSelector("input[name=q]");
@@ -23,6 +20,6 @@ export class FishDeal implements IWebScrapClass {
       path: "./screenshot.png",
       fullPage: true,
     });
-    await browser.close();
+    await page.close();
   }
 }

@@ -18,10 +18,13 @@ function main(): void {
   }
 }*/
 
-import { FishDeal } from "./FishClassesLib";
+import { FishDeal } from "./FishStoreClassesLib";
 
 const main = async (): Promise<void> => {
+  const Puppeteer = require("puppeteer");
   const fishDeal = new FishDeal();
-  await fishDeal.scrapeResults("sal");
+  const browser = await Puppeteer.launch();
+  await fishDeal.scrapeResults("sal", browser);
+  await browser.close();
 };
 main();
