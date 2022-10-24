@@ -21,10 +21,7 @@ function main(): void {
 import { FishDeal } from "./FishStoreClassesLib";
 
 const main = async (): Promise<void> => {
-  const Puppeteer = require("puppeteer");
   const fishDeal = new FishDeal();
-  const browser = await Puppeteer.launch();
-  await fishDeal.scrapeResults("sal", browser);
-  await browser.close();
+  await fishDeal.scrapeResults("sal");
 };
 main();
