@@ -1,17 +1,8 @@
-import httpClient from "./Utils/httpClient";
+import httpClient from "../Utils/httpClient";
 import cheerio from "cheerio";
+import BasicProductScrapeClass from "./BasicProductScrapeClass";
 
-abstract class BasicProductScrapeClass {
-  public abstract Url: string;
-  public async getInfoReq(searchUrl: string) {
-    const fishInfoReq = await httpClient.get(searchUrl);
-    const fishInfoData = await fishInfoReq.data;
-    return fishInfoData;
-  }
-  public abstract scrapeResults(searchTerm: string): Promise<void>;
-}
-
-export class FishDeal extends BasicProductScrapeClass {
+class FishDeal extends BasicProductScrapeClass {
   public Url: string = "https://fishdeal.co.uk/";
   public async scrapeResults(searchTerm: string): Promise<void> {
     const searchedPage = await this.getInfoReq(
@@ -24,7 +15,6 @@ export class FishDeal extends BasicProductScrapeClass {
     });*/
     console.log(searchedPage);
   }
-
   /*public async scrapeResults(searchTerm: string, browser?: any) {
     if (!browser) {
       const Puppeteer = require("puppeteer");
@@ -37,13 +27,14 @@ export class FishDeal extends BasicProductScrapeClass {
       "input[name=q]",
       (el: any, value: string) => (el.value = value),
       searchTerm
-    );
-    await page.click("button[type=submit]");
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
-    await page.screenshot({
+      );
+      await page.click("button[type=submit]");
+      await page.waitForNavigation({ waitUntil: "networkidle2" });
+      await page.screenshot({
       path: "./screenshot.png",
       fullPage: true,
     });
     await page.close();
   }*/
 }
+export default FishDeal;

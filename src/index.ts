@@ -18,7 +18,7 @@ function main(): void {
   }
 }*/
 
-import { FishDeal } from "./FishStoreClassesLib";
+import FishDeal from "./FishStoreClassLib/FishDealClass";
 
 const main = async (): Promise<void> => {
   const fishDeal = new FishDeal();
