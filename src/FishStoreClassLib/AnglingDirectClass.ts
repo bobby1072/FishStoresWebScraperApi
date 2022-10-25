@@ -1,5 +1,6 @@
 import BasicProductScrapeClass from "./BasicProductScrapeClass";
 import cheerio from "cheerio";
+import ICommonFishProduct from "./ICommonStoreItemData";
 interface ISportFishProd {
   Name: string;
   Link: string;
@@ -9,7 +10,9 @@ interface ISportFishProd {
 }
 export class SportFish extends BasicProductScrapeClass {
   public Url: string = "https://www.sportfish.co.uk";
-  public async scrapeResults(searchTerm: string): Promise<void> {
+  public async scrapeResults(
+    searchTerm: string
+  ): Promise<ICommonFishProduct[] | []> {
     const anglingDirPage = await this.getInfoReq(
       `${this.Url}/catalogsearch/result/?q=+${searchTerm}`
     );
@@ -43,22 +46,23 @@ export class SportFish extends BasicProductScrapeClass {
         productPrice && productPriceList.push(Number(productPrice));
       } catch (e) {}
     });
-    const finalItemArray: ISportFishProd[] = productLinkAndNameList.map(
+    const finalItemArray: ICommonFishProduct[] = productLinkAndNameList.map(
       (element, index) => {
         const ImageSrcAlt = productImgSrcAndAlt.find((imgElement) => {
           return element.Name === imgElement.ImageAlt;
         });
-        ImageSrcAlt &&
-          (element.ImageAlt = ImageSrcAlt.ImageAlt) &&
-          (element.ImageSrc = ImageSrcAlt.ImageSrc);
-        let prodPrice = false;
-        try {
-          prodPrice = productPriceList[index];
-        } catch (e) {}
-        prodPrice && (element.Price = prodPrice);
-        return element;
+        const prodPrice = productPriceList[index];
+        const sportFishProd: ICommonFishProduct = {
+          Name: element.Name,
+          Price: prodPrice,
+          Store: "Sport fish",
+          BaseLink: this.Url,
+          ImageSrc: ImageSrcAlt.ImageSrc,
+          ProductLink: element.Link,
+        };
+        return sportFishProd;
       }
     );
-    console.log(finalItemArray);
+    return finalItemArray;
   }
 }

@@ -1,20 +1,11 @@
 import cheerio from "cheerio";
 import BasicProductScrapeClass from "./BasicProductScrapeClass";
-export interface IFishDealProduct {
-  brand: string;
-  category: string;
-  id: string;
-  name: string;
-  position: number;
-  price: number;
-  store: string;
-  baseLink: string;
-  imageSrc: string;
-  productLink: string;
-}
+import ICommonFishProduct from "./ICommonStoreItemData";
 export class FishDeal extends BasicProductScrapeClass {
   public Url: string = "https://fishdeal.co.uk";
-  public async scrapeResults(searchTerm: string): Promise<IFishDealProduct[]> {
+  public async scrapeResults(
+    searchTerm: string
+  ): Promise<ICommonFishProduct[]> {
     const searchedPage = await this.getInfoReq(
       `${this.Url}/search?q=${searchTerm}`
     );
@@ -37,18 +28,22 @@ export class FishDeal extends BasicProductScrapeClass {
         parsedDealData.ecommerce.click.products[0] &&
         tempDataList.push(parsedDealData.ecommerce.click.products[0]);
     });
-    const finalItemArray: IFishDealProduct[] = tempDataList.map((element) => {
-      const newPrice: number | boolean = element.price && Number(element.price);
-      typeof newPrice === "number" && (element.price = newPrice);
-      element.imageSrc = `${this.Url}${
-        tempImgList.find((imgElement) => {
-          return imgElement.alt === element.name;
-        }).src
-      }`;
-      element.store = "Fish Deal";
-      element.baseLink = this.Url;
-      element.productLink = `${this.Url}${element.productLink}`;
-      return element;
+    const finalItemArray: ICommonFishProduct[] = tempDataList.map((element) => {
+      const newPrice: number = Number(element.price);
+      const fishDealProd: ICommonFishProduct = {
+        Brand: element.brand,
+        Name: element.name,
+        Price: newPrice,
+        Store: "Fish Deal",
+        BaseLink: this.Url,
+        ImageSrc: `${this.Url}${
+          tempImgList.find((imgElement) => {
+            return imgElement.alt === element.name;
+          }).src
+        }`,
+        ProductLink: element.productLink,
+      };
+      return fishDealProd;
     });
     return finalItemArray;
   }
