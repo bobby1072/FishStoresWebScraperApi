@@ -1,5 +1,5 @@
 import httpClient from "../Utils/httpClient";
-import { IFishDealProduct } from "./FishDealClass";
+import ICommonFishProduct from "./ICommonStoreItemData";
 abstract class BasicProductScrapeClass {
   abstract readonly Url: string;
   public async getInfoReq(searchUrl: string) {
@@ -9,6 +9,6 @@ abstract class BasicProductScrapeClass {
   }
   public abstract scrapeResults(
     searchTerm: string
-  ): Promise<void | IFishDealProduct[]>;
+  ): Promise<ICommonFishProduct[] | []>;
 }
 export default BasicProductScrapeClass;
