@@ -23,14 +23,14 @@ export class FishDeal extends BasicProductScrapeClass {
     const tempDataList: any[] = [];
     const tempImgList: any[] = [];
     allItems.find("div > div > a > span > img").each(function (index, element) {
-      const imgData = $(element).attr("data-src");
-      const imgAlt = $(element).attr("alt");
+      const imgData: string | undefined = $(element).attr("data-src");
+      const imgAlt: string | undefined = $(element).attr("alt");
       const imgJson = { src: imgData, alt: imgAlt };
       tempImgList.push(imgJson);
     });
     allItems.find("div > div > a").each(function (index, element) {
-      const dealData = $(element).attr("data-gtm-payload");
-      const itemLink = $(element).attr("href");
+      const dealData: string | undefined = $(element).attr("data-gtm-payload");
+      const itemLink: string | undefined = $(element).attr("href");
       const parsedDealData = dealData && JSON.parse(dealData);
       parsedDealData.ecommerce.click.products[0].productLink = itemLink;
       parsedDealData &&
@@ -39,7 +39,7 @@ export class FishDeal extends BasicProductScrapeClass {
     });
     const finalItemArray: IFishDealProduct[] = tempDataList.map((element) => {
       const newPrice: number | boolean = element.price && Number(element.price);
-      newPrice && (element.price = newPrice);
+      typeof newPrice === "number" && (element.price = newPrice);
       element.imageSrc = `${this.Url}${
         tempImgList.find((imgElement) => {
           return imgElement.alt === element.name;
