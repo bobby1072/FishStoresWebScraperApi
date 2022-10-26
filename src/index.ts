@@ -8,7 +8,6 @@ import { SportFish } from "./FishStoreClassLib/SportFishClass";
 const app: Application = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
 app.get(
   "/sportfishproductsearch/",
@@ -19,9 +18,8 @@ app.get(
         typeof prodSearchName === "string" &&
         /^[A-Za-z\s]*$/.test(prodSearchName)
       ) {
-        const sportFishObj: SportFish = new SportFish();
         const sportFishItems: ICommonFishProduct[] =
-          await sportFishObj.scrapeResults(prodSearchName);
+          await new SportFish().scrapeResults(prodSearchName);
         res.status(200);
         res.json(sportFishItems);
       } else {
@@ -36,7 +34,7 @@ app.get(
 );
 
 app.get(
-  "/fishdealproductsearch",
+  "/fishdealproductsearch/",
   async (req: Request, res: Response): Promise<void> => {
     try {
       const prodSearchName = req.query.searchterm;
@@ -44,9 +42,8 @@ app.get(
         typeof prodSearchName === "string" &&
         /^[A-Za-z\s]*$/.test(prodSearchName)
       ) {
-        const fishDealObj: FishDeal = new FishDeal();
         const fishDealItems: ICommonFishProduct[] =
-          await fishDealObj.scrapeResults(prodSearchName);
+          await new FishDeal().scrapeResults(prodSearchName);
         res.status(200);
         res.json(fishDealItems);
       } else {
@@ -69,9 +66,8 @@ app.get(
         typeof prodSearchName === "string" &&
         /^[A-Za-z\s]*$/.test(prodSearchName)
       ) {
-        const allItemsClass: AllItemShops = new AllItemShops();
         const allSearchItems: ICommonFishProduct[] =
-          await allItemsClass.getAllItems(prodSearchName);
+          await new AllItemShops().getAllItems(prodSearchName);
         res.status(200);
         res.json(allSearchItems);
       } else {
