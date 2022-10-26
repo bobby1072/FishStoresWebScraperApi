@@ -1,7 +1,7 @@
 import cheerio from "cheerio";
 import BasicProductScrapeClass from "./BasicProductScrapeClass";
 import ICommonFishProduct from "./ICommonStoreItemData";
-export class FishDeal extends BasicProductScrapeClass {
+class FishDeal extends BasicProductScrapeClass {
   public Url: string = "https://fishdeal.co.uk";
   public async scrapeResults(
     searchTerm: string
@@ -48,3 +48,4 @@ export class FishDeal extends BasicProductScrapeClass {
     return finalItemArray;
   }
 }
+export default FishDeal;

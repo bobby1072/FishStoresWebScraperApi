@@ -8,7 +8,7 @@ interface ISportFishProd {
   ImageAlt: string;
   Price: number;
 }
-export class SportFish extends BasicProductScrapeClass {
+class SportFish extends BasicProductScrapeClass {
   public Url: string = "https://www.sportfish.co.uk";
   public async scrapeResults(
     searchTerm: string
@@ -66,3 +66,4 @@ export class SportFish extends BasicProductScrapeClass {
     return finalItemArray;
   }
 }
+export default SportFish;
