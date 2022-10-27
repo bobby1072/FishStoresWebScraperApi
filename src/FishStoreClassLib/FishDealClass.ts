@@ -3,6 +3,7 @@ import BasicProductScrapeClass from "./BasicProductScrapeClass";
 import ICommonFishProduct from "./ICommonStoreItemData";
 class FishDeal extends BasicProductScrapeClass {
   public Url: string = "https://fishdeal.co.uk";
+  public Store: string = "Fish Deal";
   public async scrapeResults(
     searchTerm: string
   ): Promise<ICommonFishProduct[]> {
@@ -34,7 +35,7 @@ class FishDeal extends BasicProductScrapeClass {
         Brand: element.brand,
         Name: element.name,
         Price: newPrice,
-        Store: "Fish Deal",
+        Store: this.Store,
         BaseLink: this.Url,
         ImageSrc: `${this.Url}${
           tempImgList.find((imgElement) => {

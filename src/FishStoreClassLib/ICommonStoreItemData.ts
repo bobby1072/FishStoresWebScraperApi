@@ -4,7 +4,7 @@ interface ICommonFishProduct {
   Price?: number;
   Store: string;
   BaseLink: string;
-  ImageSrc: string;
+  ImageSrc?: string;
   ProductLink: string;
 }
 export default ICommonFishProduct;
