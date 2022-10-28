@@ -1,18 +1,20 @@
 import httpClient from "../Utils/httpClient";
 import ICommonFishProduct from "./ICommonStoreItemData";
 import { IAltAndSrc, INameAndLink } from "./IDataFinds";
-abstract class BasicProductScrapeClass {
+import PrimitiveScrapeClass from "./PrimitiveScrapeClass";
+abstract class BasicProductScrapeClass extends PrimitiveScrapeClass {
   abstract readonly Url: string;
   abstract readonly Store: string;
-  public async getInfoReq(searchUrl: string) {
+  protected async getInfoReq(searchUrl: string) {
     const fishInfoReq = await httpClient.get(searchUrl);
     const fishInfoData = await fishInfoReq.data;
     return fishInfoData;
   }
-  public makeFinalItemsArray(
+  protected makeFinalItemsArray(
     productLinkAndNameList: INameAndLink[],
     productImgSrcAndAlt: IAltAndSrc[],
-    productPriceList: number[]
+    productPriceList: number[],
+    searchTerm: string
   ): ICommonFishProduct[] {
     const finalItemArray: ICommonFishProduct[] = productLinkAndNameList.map(
       (element, index) => {
@@ -32,7 +34,7 @@ abstract class BasicProductScrapeClass {
         return sportFishProd;
       }
     );
-    return finalItemArray;
+    return this.sortResults(searchTerm, finalItemArray);
   }
   public abstract scrapeResults(
     searchTerm: string

@@ -44,7 +44,8 @@ class SportFish extends BasicProductScrapeClass {
     const finalItemArray: ICommonFishProduct[] = this.makeFinalItemsArray(
       productLinkAndNameList,
       productImgSrcAndAlt,
-      productPriceList
+      productPriceList,
+      searchTerm
     );
     return finalItemArray;
   }

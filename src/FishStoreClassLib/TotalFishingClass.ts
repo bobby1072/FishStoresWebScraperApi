@@ -52,7 +52,8 @@ class TotalFishing extends BasicProductScrapeClass {
     const finalItemArray: ICommonFishProduct[] = this.makeFinalItemsArray(
       nameLinkList,
       imageAltList,
-      priceDataList
+      priceDataList,
+      searchTerm
     );
     return finalItemArray;
   }

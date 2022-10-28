@@ -49,7 +49,8 @@ class FishDeal extends BasicProductScrapeClass {
     const finalItemArray: ICommonFishProduct[] = this.makeFinalItemsArray(
       nameLinkList,
       tempImgList,
-      priceList
+      priceList,
+      searchTerm
     );
     return finalItemArray;
   }
