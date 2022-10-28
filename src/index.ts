@@ -34,7 +34,7 @@ function main(): void {
     }
   );
   app.get(
-    "/totalfishingproductsearch",
+    "/totalfishingproductsearch/",
     async (req: Request, res: Response): Promise<void> => {
       try {
         const prodSearchName = req.query.searchterm;

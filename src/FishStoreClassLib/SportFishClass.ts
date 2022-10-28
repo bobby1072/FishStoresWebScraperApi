@@ -14,17 +14,17 @@ class SportFish extends BasicProductScrapeClass {
     const productLinkAndNameList: any[] = [];
     const allProductLinks: cheerio.Cheerio = $("a.product-item-link");
     allProductLinks.each((index: number, element: cheerio.Element) => {
-      const productLink = $(element).attr("href");
-      const productName = $(element).text();
+      const productLink: string | undefined = $(element).attr("href");
+      const productName: string = $(element).text();
       productLink &&
         productName &&
         productLinkAndNameList.push({ Name: productName, Link: productLink });
     });
-    const allProductImgs = $("img.product-image-photo");
+    const allProductImgs: cheerio.Cheerio = $("img.product-image-photo");
     const productImgSrcAndAlt: any[] = [];
-    allProductImgs.each((index, element) => {
-      const productImgSrc = $(element).attr("src");
-      const productImgAlt = $(element).attr("alt");
+    allProductImgs.each((index: number, element: cheerio.Element) => {
+      const productImgSrc: string | undefined = $(element).attr("src");
+      const productImgAlt: string | undefined = $(element).attr("alt");
       productImgSrc &&
         productImgAlt &&
         productImgSrcAndAlt.push({
@@ -32,10 +32,11 @@ class SportFish extends BasicProductScrapeClass {
           ImageAlt: productImgAlt,
         });
     });
-    const allProductPrices = $("span.price-wrapper");
+    const allProductPrices: cheerio.Cheerio = $("span.price-wrapper");
     const productPriceList: any[] = [];
     allProductPrices.each((index: number, element: cheerio.Element) => {
-      const productPrice = $(element).attr("data-price-amount");
+      const productPrice: string | undefined =
+        $(element).attr("data-price-amount");
       try {
         productPrice && productPriceList.push(Number(productPrice));
       } catch (e) {}

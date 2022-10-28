@@ -19,8 +19,8 @@ class TotalFishing extends BasicProductScrapeClass {
     allProds
       .find("div > a > span > span > img")
       .each((index: number, element: cheerio.Element) => {
-        const imageSrc = $(element).attr("src");
-        const imageAlt = $(element).attr("alt");
+        const imageSrc: string | undefined = $(element).attr("src");
+        const imageAlt: string | undefined = $(element).attr("alt");
         if (typeof imageAlt === "string" && typeof imageSrc === "string") {
           const imgData: IAltAndSrc = {
             ImageSrc: imageSrc,
@@ -32,8 +32,8 @@ class TotalFishing extends BasicProductScrapeClass {
     allProds
       .find("div > div > strong > a")
       .each((index: number, element: cheerio.Element) => {
-        const prodLink = $(element).attr("href");
-        const prodName = $(element).text();
+        const prodLink: string | undefined = $(element).attr("href");
+        const prodName: string = $(element).text();
         if (typeof prodLink === "string") {
           const nameData: INameAndLink = {
             Link: prodLink,
@@ -42,9 +42,9 @@ class TotalFishing extends BasicProductScrapeClass {
           nameData && nameLinkList.push(nameData);
         }
       });
-    const priceData = $("[data-price-type=finalPrice]");
+    const priceData: cheerio.Cheerio = $("[data-price-type=finalPrice]");
     priceData.each((index: number, element: cheerio.Element) => {
-      const price = $(element).attr("data-price-amount");
+      const price: string | undefined = $(element).attr("data-price-amount");
       try {
         price && priceDataList.push(Number(price));
       } catch (e) {}

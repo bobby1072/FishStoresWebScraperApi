@@ -1,7 +1,7 @@
 import cheerio from "cheerio";
 import BasicProductScrapeClass from "./BasicProductScrapeClass";
 import ICommonFishProduct from "./ICommonStoreItemData";
-import { IAltAndSrc } from "./IDataFinds";
+import { IAltAndSrc, INameAndLink } from "./IDataFinds";
 class FishDeal extends BasicProductScrapeClass {
   public Url: string = "https://fishdeal.co.uk";
   public Store: string = "Fish Deal";
@@ -13,8 +13,9 @@ class FishDeal extends BasicProductScrapeClass {
     );
     const $: cheerio.Root = cheerio.load(searchedPage);
     const allItems: cheerio.Cheerio = $("div.SC_DealsBlock-item");
-    const tempDataList: any[] = [];
+    const nameLinkList: INameAndLink[] = [];
     const tempImgList: IAltAndSrc[] = [];
+    const priceList: number[] = [];
     allItems
       .find("div > div > a > span > img")
       .each(function (index: number, element: cheerio.Element) {
@@ -32,30 +33,24 @@ class FishDeal extends BasicProductScrapeClass {
           $(element).attr("data-gtm-payload");
         const itemLink: string | undefined = $(element).attr("href");
         const parsedDealData = dealData && JSON.parse(dealData);
-        parsedDealData.ecommerce.click.products[0].productLink = itemLink;
         parsedDealData &&
           parsedDealData.ecommerce.click.products[0] &&
-          tempDataList.push(parsedDealData.ecommerce.click.products[0]);
+          itemLink &&
+          nameLinkList.push({
+            Name: parsedDealData.ecommerce.click.products[0].name,
+            Link: itemLink,
+            Brand: parsedDealData.ecommerce.click.products[0].brand,
+          });
+        const newPrice: number = Number(
+          parsedDealData.ecommerce.click.products[0].price
+        );
+        newPrice && priceList.push(newPrice);
       });
-    const finalItemArray: ICommonFishProduct[] = tempDataList.map((element) => {
-      const newPrice: number = Number(element.price);
-      const fishDealProd: ICommonFishProduct = {
-        Brand: element.brand,
-        Name: element.name,
-        Price: newPrice,
-        Store: this.Store,
-        BaseLink: this.Url,
-        ...(tempImgList && {
-          ImageSrc: `${this.Url}${
-            tempImgList.find((imgElement) => {
-              return imgElement.ImageAlt === element.name;
-            })?.ImageSrc
-          }`,
-        }),
-        ProductLink: element.productLink,
-      };
-      return fishDealProd;
-    });
+    const finalItemArray: ICommonFishProduct[] = this.makeFinalItemsArray(
+      nameLinkList,
+      tempImgList,
+      priceList
+    );
     return finalItemArray;
   }
 }
