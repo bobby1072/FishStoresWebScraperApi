@@ -1,6 +1,7 @@
 import cheerio from "cheerio";
 import BasicProductScrapeClass from "./BasicProductScrapeClass";
 import ICommonFishProduct from "./ICommonStoreItemData";
+import { IAltAndSrc } from "./IDataFinds";
 class FishDeal extends BasicProductScrapeClass {
   public Url: string = "https://fishdeal.co.uk";
   public Store: string = "Fish Deal";
@@ -10,25 +11,32 @@ class FishDeal extends BasicProductScrapeClass {
     const searchedPage = await this.getInfoReq(
       `${this.Url}/search?q=${searchTerm}`
     );
-    const $ = cheerio.load(searchedPage);
-    const allItems = $("div.SC_DealsBlock-item");
+    const $: cheerio.Root = cheerio.load(searchedPage);
+    const allItems: cheerio.Cheerio = $("div.SC_DealsBlock-item");
     const tempDataList: any[] = [];
-    const tempImgList: any[] = [];
-    allItems.find("div > div > a > span > img").each(function (index, element) {
-      const imgData: string | undefined = $(element).attr("data-src");
-      const imgAlt: string | undefined = $(element).attr("alt");
-      const imgJson = { src: imgData, alt: imgAlt };
-      tempImgList.push(imgJson);
-    });
-    allItems.find("div > div > a").each(function (index, element) {
-      const dealData: string | undefined = $(element).attr("data-gtm-payload");
-      const itemLink: string | undefined = $(element).attr("href");
-      const parsedDealData = dealData && JSON.parse(dealData);
-      parsedDealData.ecommerce.click.products[0].productLink = itemLink;
-      parsedDealData &&
-        parsedDealData.ecommerce.click.products[0] &&
-        tempDataList.push(parsedDealData.ecommerce.click.products[0]);
-    });
+    const tempImgList: IAltAndSrc[] = [];
+    allItems
+      .find("div > div > a > span > img")
+      .each(function (index: number, element: cheerio.Element) {
+        const imgData: string | undefined = $(element).attr("data-src");
+        const imgAlt: string | undefined = $(element).attr("alt");
+        if (imgData && imgAlt) {
+          const imgJson = { ImageSrc: imgData, ImageAlt: imgAlt };
+          tempImgList.push(imgJson);
+        }
+      });
+    allItems
+      .find("div > div > a")
+      .each(function (index: number, element: cheerio.Element) {
+        const dealData: string | undefined =
+          $(element).attr("data-gtm-payload");
+        const itemLink: string | undefined = $(element).attr("href");
+        const parsedDealData = dealData && JSON.parse(dealData);
+        parsedDealData.ecommerce.click.products[0].productLink = itemLink;
+        parsedDealData &&
+          parsedDealData.ecommerce.click.products[0] &&
+          tempDataList.push(parsedDealData.ecommerce.click.products[0]);
+      });
     const finalItemArray: ICommonFishProduct[] = tempDataList.map((element) => {
       const newPrice: number = Number(element.price);
       const fishDealProd: ICommonFishProduct = {
@@ -37,11 +45,13 @@ class FishDeal extends BasicProductScrapeClass {
         Price: newPrice,
         Store: this.Store,
         BaseLink: this.Url,
-        ImageSrc: `${this.Url}${
-          tempImgList.find((imgElement) => {
-            return imgElement.alt === element.name;
-          }).src
-        }`,
+        ...(tempImgList && {
+          ImageSrc: `${this.Url}${
+            tempImgList.find((imgElement) => {
+              return imgElement.ImageAlt === element.name;
+            })?.ImageSrc
+          }`,
+        }),
         ProductLink: element.productLink,
       };
       return fishDealProd;

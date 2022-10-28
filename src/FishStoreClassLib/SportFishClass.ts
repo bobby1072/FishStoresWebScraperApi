@@ -10,10 +10,10 @@ class SportFish extends BasicProductScrapeClass {
     const anglingDirPage = await this.getInfoReq(
       `${this.Url}/catalogsearch/result/?q=+${searchTerm}`
     );
-    const $ = cheerio.load(anglingDirPage);
+    const $: cheerio.Root = cheerio.load(anglingDirPage);
     const productLinkAndNameList: any[] = [];
-    const allProductLinks = $("a.product-item-link");
-    allProductLinks.each((index, element) => {
+    const allProductLinks: cheerio.Cheerio = $("a.product-item-link");
+    allProductLinks.each((index: number, element: cheerio.Element) => {
       const productLink = $(element).attr("href");
       const productName = $(element).text();
       productLink &&
@@ -34,7 +34,7 @@ class SportFish extends BasicProductScrapeClass {
     });
     const allProductPrices = $("span.price-wrapper");
     const productPriceList: any[] = [];
-    allProductPrices.each((index, element) => {
+    allProductPrices.each((index: number, element: cheerio.Element) => {
       const productPrice = $(element).attr("data-price-amount");
       try {
         productPrice && productPriceList.push(Number(productPrice));

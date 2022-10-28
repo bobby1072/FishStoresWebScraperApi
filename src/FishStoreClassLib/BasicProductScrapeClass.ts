@@ -4,6 +4,11 @@ import { IAltAndSrc, INameAndLink } from "./IDataFinds";
 abstract class BasicProductScrapeClass {
   abstract readonly Url: string;
   abstract readonly Store: string;
+  public async getInfoReq(searchUrl: string) {
+    const fishInfoReq = await httpClient.get(searchUrl);
+    const fishInfoData = await fishInfoReq.data;
+    return fishInfoData;
+  }
   public makeFinalItemsArray(
     productLinkAndNameList: INameAndLink[],
     productImgSrcAndAlt: IAltAndSrc[],
@@ -16,6 +21,7 @@ abstract class BasicProductScrapeClass {
         });
         const prodPrice = productPriceList[index];
         const sportFishProd: ICommonFishProduct = {
+          ...(element.Brand && { Brand: element.Brand }),
           Name: element.Name,
           Price: prodPrice,
           Store: this.Store,
@@ -27,11 +33,6 @@ abstract class BasicProductScrapeClass {
       }
     );
     return finalItemArray;
-  }
-  public async getInfoReq(searchUrl: string) {
-    const fishInfoReq = await httpClient.get(searchUrl);
-    const fishInfoData = await fishInfoReq.data;
-    return fishInfoData;
   }
   public abstract scrapeResults(
     searchTerm: string
