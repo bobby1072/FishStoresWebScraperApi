@@ -10,6 +10,16 @@ abstract class BasicProductScrapeClass extends PrimitiveScrapeClass {
     const fishInfoData = await fishInfoReq.data;
     return fishInfoData;
   }
+  private makeItemsUnique(prodArr: ICommonFishProduct[]): ICommonFishProduct[] {
+    const clean: ICommonFishProduct[] = prodArr.filter(
+      (arr, index, self) =>
+        index ===
+        self.findIndex(
+          (t) => t.Name === arr.Name && t.BaseLink === arr.BaseLink
+        )
+    );
+    return clean;
+  }
   protected makeFinalItemsArray(
     productLinkAndNameList: INameAndLink[],
     productImgSrcAndAlt: IAltAndSrc[],
@@ -34,7 +44,7 @@ abstract class BasicProductScrapeClass extends PrimitiveScrapeClass {
         return sportFishProd;
       }
     );
-    return this.sortResults(searchTerm, finalItemArray);
+    return this.makeItemsUnique(this.sortResults(searchTerm, finalItemArray));
   }
   public abstract scrapeResults(
     searchTerm: string
