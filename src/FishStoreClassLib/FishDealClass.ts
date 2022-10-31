@@ -18,17 +18,20 @@ class FishDeal extends BasicProductScrapeClass {
     const priceList: number[] = [];
     allItems
       .find("div > div > a > span > img")
-      .each(function (index: number, element: cheerio.Element) {
+      .each((index: number, element: cheerio.Element) => {
         const imgData: string | undefined = $(element).attr("data-src");
         const imgAlt: string | undefined = $(element).attr("alt");
         if (imgData && imgAlt) {
-          const imgJson = { ImageSrc: imgData, ImageAlt: imgAlt };
+          const imgJson = {
+            ImageSrc: `${this.Url}${imgData}`,
+            ImageAlt: imgAlt,
+          };
           tempImgList.push(imgJson);
         }
       });
     allItems
       .find("div > div > a")
-      .each(function (index: number, element: cheerio.Element) {
+      .each((index: number, element: cheerio.Element) => {
         const dealData: string | undefined =
           $(element).attr("data-gtm-payload");
         const itemLink: string | undefined = $(element).attr("href");
@@ -38,7 +41,7 @@ class FishDeal extends BasicProductScrapeClass {
           itemLink &&
           nameLinkList.push({
             Name: parsedDealData.ecommerce.click.products[0].name,
-            Link: itemLink,
+            Link: `${this.Url}${itemLink}`,
             Brand: parsedDealData.ecommerce.click.products[0].brand,
           });
         const newPrice: number = Number(
