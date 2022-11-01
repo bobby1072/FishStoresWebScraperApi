@@ -26,7 +26,7 @@ class TotalFishing extends BasicProductScrapeClass {
             ImageSrc: imageSrc,
             ImageAlt: imageAlt,
           };
-          imgData && imageAltList.push(imgData);
+          imageAltList.push(imgData);
         }
       });
     allProds

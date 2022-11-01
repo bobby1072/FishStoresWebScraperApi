@@ -6,6 +6,7 @@ import ICommonFishProduct from "./FishStoreClassLib/ICommonStoreItemData";
 import FishDeal from "./FishStoreClassLib/FishDealClass";
 import SportFish from "./FishStoreClassLib/SportFishClass";
 import TotalFishing from "./FishStoreClassLib/TotalFishingClass";
+import GlasgowAngling from "./FishStoreClassLib/GlasgowAnglingClass";
 function main(): void {
   const app: Application = express();
   app.use(cors());
@@ -21,6 +22,29 @@ function main(): void {
         ) {
           const sportFishItems: ICommonFishProduct[] =
             await new SportFish().scrapeResults(prodSearchName);
+          res.status(200);
+          res.json(sportFishItems);
+        } else {
+          res.status(400);
+          res.send("Possibly inncorrect URL argument given");
+        }
+      } catch (error) {
+        res.status(500);
+        res.send("Internal server error occured");
+      }
+    }
+  );
+  app.get(
+    "/glasgowanglingproductsearch/",
+    async (req: Request, res: Response): Promise<void> => {
+      try {
+        const prodSearchName = req.query.searchterm;
+        if (
+          typeof prodSearchName === "string" &&
+          /^[A-Za-z\s]*$/.test(prodSearchName)
+        ) {
+          const sportFishItems: ICommonFishProduct[] =
+            await new GlasgowAngling().scrapeResults(prodSearchName);
           res.status(200);
           res.json(sportFishItems);
         } else {
