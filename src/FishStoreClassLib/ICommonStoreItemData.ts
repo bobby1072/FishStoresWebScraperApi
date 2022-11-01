@@ -6,5 +6,6 @@ interface ICommonFishProduct {
   BaseLink: string;
   ImageSrc?: string;
   ProductLink: string;
+  Units?: number;
 }
 export default ICommonFishProduct;

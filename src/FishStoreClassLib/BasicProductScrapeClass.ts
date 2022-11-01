@@ -10,6 +10,26 @@ abstract class BasicProductScrapeClass extends PrimitiveScrapeClass {
     const fishInfoData = await fishInfoReq.data;
     return fishInfoData;
   }
+  private findPricePerUnit(
+    prodArr: ICommonFishProduct[]
+  ): ICommonFishProduct[] {
+    return prodArr.map((element) => {
+      const itemUnits: string = `${element.Name.match(/\[d+][pcs]/)}`;
+      itemUnits
+        ? (element.Units = Number(itemUnits.replace("pcs", "")))
+          ? (element.Name = element.Name.replace(itemUnits, ""))
+          : null
+        : null;
+      const itemUnit: string | boolean =
+        !itemUnits && `${element.Name.match(/\[d+][pc]/)}`;
+      typeof itemUnit === "string"
+        ? (element.Units = Number(itemUnit.replace("pc", "")))
+          ? (element.Name = element.Name.replace(itemUnit, ""))
+          : null
+        : null;
+      return element;
+    });
+  }
   private makeItemsUnique(prodArr: ICommonFishProduct[]): ICommonFishProduct[] {
     const clean: ICommonFishProduct[] = prodArr.filter(
       (arr, index, self) =>
@@ -44,7 +64,9 @@ abstract class BasicProductScrapeClass extends PrimitiveScrapeClass {
         return sportFishProd;
       }
     );
-    return this.makeItemsUnique(this.sortResults(searchTerm, finalItemArray));
+    return this.makeItemsUnique(
+      this.sortResults(searchTerm, this.findPricePerUnit(finalItemArray))
+    );
   }
   public abstract scrapeResults(
     searchTerm: string
