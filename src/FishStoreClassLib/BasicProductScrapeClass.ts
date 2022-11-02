@@ -14,17 +14,14 @@ abstract class BasicProductScrapeClass extends PrimitiveScrapeClass {
     prodArr: ICommonFishProduct[]
   ): ICommonFishProduct[] {
     return prodArr.map((element) => {
-      const itemUnits: string = `${element.Name.match(/\[d+][pcs]/)}`;
+      const itemUnits: RegExpMatchArray | null =
+        element.Name.match(/(\d+) pcs/) ||
+        element.Name.match(/(\d+)pcs/) ||
+        element.Name.match(/(\d+)pc/) ||
+        element.Name.match(/(\d+) pc/);
       itemUnits
-        ? (element.Units = Number(itemUnits.replace("pcs", "")))
-          ? (element.Name = element.Name.replace(itemUnits, ""))
-          : null
-        : null;
-      const itemUnit: string | boolean =
-        !itemUnits && `${element.Name.match(/\[d+][pc]/)}`;
-      typeof itemUnit === "string"
-        ? (element.Units = Number(itemUnit.replace("pc", "")))
-          ? (element.Name = element.Name.replace(itemUnit, ""))
+        ? (element.Units = Number(itemUnits[1]))
+          ? (element.Name = element.Name.replace(itemUnits[0], ""))
           : null
         : null;
       return element;
