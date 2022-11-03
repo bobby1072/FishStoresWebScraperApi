@@ -10,22 +10,18 @@ abstract class BasicProductScrapeClass extends PrimitiveScrapeClass {
     const fishInfoData = await fishInfoReq.data;
     return fishInfoData;
   }
-  private findPricePerUnit(
-    prodArr: ICommonFishProduct[]
-  ): ICommonFishProduct[] {
-    return prodArr.map((element) => {
-      const itemUnits: RegExpMatchArray | null =
-        element.Name.match(/(\d+) pcs/) ||
-        element.Name.match(/(\d+)pcs/) ||
-        element.Name.match(/(\d+)pc/) ||
-        element.Name.match(/(\d+) pc/);
-      itemUnits
-        ? (element.Units = Number(itemUnits[1]))
-          ? (element.Name = element.Name.replace(itemUnits[0], ""))
-          : null
-        : null;
-      return element;
-    });
+  private findPricePerUnit(prod: ICommonFishProduct): ICommonFishProduct {
+    const itemUnits: RegExpMatchArray | null =
+      prod.Name.match(/(\d+) pcs/) ||
+      prod.Name.match(/(\d+)pcs/) ||
+      prod.Name.match(/(\d+)pc/) ||
+      prod.Name.match(/(\d+) pc/);
+    itemUnits
+      ? (prod.Units = Number(itemUnits[1]))
+        ? (prod.Name = prod.Name.replace(itemUnits[0], ""))
+        : null
+      : null;
+    return prod;
   }
   private makeItemsUnique(prodArr: ICommonFishProduct[]): ICommonFishProduct[] {
     const clean: ICommonFishProduct[] = prodArr.filter(
@@ -58,12 +54,10 @@ abstract class BasicProductScrapeClass extends PrimitiveScrapeClass {
           ...(ImageSrcAlt?.ImageSrc && { ImageSrc: ImageSrcAlt.ImageSrc }),
           ProductLink: element.Link,
         };
-        return sportFishProd;
+        return this.findPricePerUnit(sportFishProd);
       }
     );
-    return this.makeItemsUnique(
-      this.sortResults(searchTerm, this.findPricePerUnit(finalItemArray))
-    );
+    return this.makeItemsUnique(this.sortResults(searchTerm, finalItemArray));
   }
   public abstract scrapeResults(
     searchTerm: string
