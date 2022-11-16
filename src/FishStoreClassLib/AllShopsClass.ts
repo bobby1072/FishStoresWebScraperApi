@@ -6,14 +6,17 @@ import PrimitiveScrapeClass from "./PrimitiveScrapeClass";
 import GlasgowAngling from "./GlasgowAnglingClass";
 class AllItemShops extends PrimitiveScrapeClass {
   public async getAllItems(searchTerm: string): Promise<ICommonFishProduct[]> {
-    const fishDealItemsArr: ICommonFishProduct[] =
-      await new FishDeal().scrapeResults(searchTerm);
-    const sportFishItemsArr: ICommonFishProduct[] =
-      await new SportFish().scrapeResults(searchTerm);
-    const totalFishingItems: ICommonFishProduct[] =
-      await new TotalFishing().scrapeResults(searchTerm);
-    const glasgowAnglingItems: ICommonFishProduct[] =
-      await new GlasgowAngling().scrapeResults(searchTerm);
+    const [
+      fishDealItemsArr,
+      sportFishItemsArr,
+      totalFishingItems,
+      glasgowAnglingItems,
+    ] = await Promise.all([
+      new FishDeal().scrapeResults(searchTerm),
+      new SportFish().scrapeResults(searchTerm),
+      new TotalFishing().scrapeResults(searchTerm),
+      new GlasgowAngling().scrapeResults(searchTerm),
+    ]);
     const allItems: ICommonFishProduct[] = this.sortResults(
       searchTerm,
       [
