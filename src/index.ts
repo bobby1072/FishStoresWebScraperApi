@@ -27,10 +27,12 @@ function main(): void {
         } else {
           res.status(400);
           res.send("Possibly inncorrect URL argument given");
+          throw new Error("User gave an invalid URL arg");
         }
       } catch (error) {
         res.status(500);
         res.send("Internal server error occured");
+        throw new Error("Most likely failed on api requests or response.");
       }
     }
   );
@@ -50,10 +52,12 @@ function main(): void {
         } else {
           res.status(400);
           res.send("Possibly inncorrect URL argument given");
+          throw new Error("User gave an invalid URL arg");
         }
       } catch (error) {
         res.status(500);
         res.send("Internal server error occured");
+        throw new Error("Most likely failed on api requests or response.");
       }
     }
   );
@@ -73,10 +77,12 @@ function main(): void {
         } else {
           res.status(400);
           res.send("Possibly inncorrect URL argument given");
+          throw new Error("User gave an invalid URL arg");
         }
       } catch (error) {
         res.status(500);
         res.send("Internal server error occured");
+        throw new Error("Most likely failed on api requests or response.");
       }
     }
   );
@@ -96,10 +102,12 @@ function main(): void {
         } else {
           res.status(400);
           res.send("Possibly inncorrect URL argument given");
+          throw new Error("User gave an invalid URL arg");
         }
       } catch (error) {
         res.status(500);
         res.send("Internal server error occured");
+        throw new Error("Most likely failed on api requests or response.");
       }
     }
   );
@@ -120,10 +128,12 @@ function main(): void {
         } else {
           res.status(400);
           res.send("Possibly inncorrect URL argument given");
+          throw new Error("User gave an invalid URL arg");
         }
       } catch (error) {
         res.status(500);
         res.send("Internal server error occured");
+        throw new Error("Most likely failed on api requests or response.");
       }
     }
   );

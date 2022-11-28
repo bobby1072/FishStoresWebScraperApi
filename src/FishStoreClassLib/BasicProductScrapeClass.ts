@@ -7,7 +7,7 @@ abstract class BasicProductScrapeClass extends PrimitiveScrapeClass {
   abstract readonly Store: string;
   protected async getInfoReq(searchUrl: string) {
     const fishInfoReq = await httpClient.get(searchUrl);
-    const fishInfoData = await fishInfoReq.data;
+    const fishInfoData = fishInfoReq.data;
     return fishInfoData;
   }
   private findPricePerUnit(prod: ICommonFishProduct): ICommonFishProduct {
